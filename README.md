@@ -26,19 +26,20 @@ Para este ejercicio, se utilizará la base de datos Redis. Se deberá realizar u
 ```bash
 docker pull redis
 docker run --name Myredis -p 6379:6379 -d redis
-docker exec -it Myredis bash
 ```
 Copiar los archivos bataxi.csv y script_redis.py al contenedor de redis:
         
 ```bash
 docker cp bataxi.csv <id_container>:/bataxi.csv
 docker cp script_redis.py <id_container>:/script_redis.py
+docker exec -it Myredis bash
 ```
 
 siendo `<id_container>` el id del contenedor de redis.
 
 Luego, ejecutar el script de python en el contenedor. Para ello, hay que tener instalado python3 en el contenedor y la dependencia de redis:
 ```bash
+cd ..
 apt-get update
 apt-get install python3
 apt-get install python3-redis
