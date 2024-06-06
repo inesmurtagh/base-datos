@@ -59,6 +59,83 @@ db.albumlist.aggregate([
 ])
 ```
 
+A continuación se dejan los resultados de la ejecucuión:
+
+**Ejercicio 1**
+```
+# se muestran solo las primeras 7 filas de resultado
+{
+  _id: 1970,
+  count: 26
+}
+{
+  _id: 1972,
+  count: 24
+}
+{
+  _id: 1973,
+  count: 23
+}
+{
+  _id: 1969,
+  count: 22
+}
+{
+  _id: 1968,
+  count: 21
+}
+{
+  _id: 1971,
+  count: 21
+}
+{
+  _id: 1967,
+  count: 20
+}
+
+```
+
+**Ejercicio 2**
+```
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 500,
+  modifiedCount: 500,
+  upsertedCount: 0
+}
+
+```
+
+**Ejercicio 3**
+```
+# se muestran unicamente las primeras 6 filas de resultado
+{
+  total_score: 3855,
+  artist: 'The Beatles'
+}
+{
+  total_score: 3604,
+  artist: 'The Rolling Stones'
+}
+{
+  total_score: 3377,
+  artist: 'Bob Dylan'
+}
+{
+  total_score: 2251,
+  artist: 'Bruce Springsteen'
+}
+{
+  total_score: 2210,
+  artist: 'The Who'
+}
+{
+  total_score: 2107,
+  artist: 'Led Zeppelin'
+}
+```
+
 
 ---
 
