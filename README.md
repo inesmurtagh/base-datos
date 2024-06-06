@@ -62,8 +62,8 @@ db.albumlist.aggregate([
 A continuación se dejan los resultados de la ejecucuión:
 
 **Ejercicio 1**
+(se muestran solo las primeras 5 filas de resultado)
 ```
-# se muestran solo las primeras 7 filas de resultado
 {
   _id: 1970,
   count: 26
@@ -84,15 +84,6 @@ A continuación se dejan los resultados de la ejecucuión:
   _id: 1968,
   count: 21
 }
-{
-  _id: 1971,
-  count: 21
-}
-{
-  _id: 1967,
-  count: 20
-}
-
 ```
 
 **Ejercicio 2**
@@ -104,12 +95,11 @@ A continuación se dejan los resultados de la ejecucuión:
   modifiedCount: 500,
   upsertedCount: 0
 }
-
 ```
 
 **Ejercicio 3**
+(se muestran solo las primeras 5 filas de resultado)
 ```
-# se muestran unicamente las primeras 6 filas de resultado
 {
   total_score: 3855,
   artist: 'The Beatles'
@@ -129,10 +119,6 @@ A continuación se dejan los resultados de la ejecucuión:
 {
   total_score: 2210,
   artist: 'The Who'
-}
-{
-  total_score: 2107,
-  artist: 'Led Zeppelin'
 }
 ```
 
