@@ -87,15 +87,54 @@ A continuación se dejan los resultados de la ejecucuión:
 ```
 
 **Ejercicio 2**
+Se requiere inicializar un sandbox de Neo4j en https://sandbox.neo4j.com/
+Luego de popular la base de datos se ejecutan las siguientes consultas:
+
+Query 1:
 ```
-{
+match (p:Product) return count(p)
+```
+Salida: 77 
+
+
+Query 2:
+```
+match (p:Product) where (p.productName = 'Queso Cabrales') return p.unitPrice
+```
+Salida: 21.0 
+
+
+Query 3:
+```
+match (p:Product)-[r:PART_OF]->(c:Category {categoryName: 'Condiments'}) return count(p)
+```
+Salida: 12
+
+
+
+Query 4:
+```
+match (s:Supplier {country:'UK'})-[:SUPPLIES]->(p:Product)
+return p.productName, p.unitPrice
+order by p.unitPrice DESC
+limit 3
+```
+Salida: 
+| p.productName | p.unitPrice   | 
+| ------------- |:-------------:|
+| Chang         | 19.0          |
+| Chai          | 18.0          |
+| Anissed Syrup | 10.0          |
+
+
+{ 
   acknowledged: true,
   insertedId: null,
   matchedCount: 500,
   modifiedCount: 500,
   upsertedCount: 0
 }
-```
+
 
 **Ejercicio 3**
 (se muestran solo las primeras 5 filas de resultado)
