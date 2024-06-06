@@ -1,23 +1,75 @@
 # Trabajo Práctico Obligatorio
+Fecha de Entrega: 19 de junio de 2024
 
 ## Integrantes
-- Integrante 1
-- Integrante 2
-- Integrante 3
-
-## Fecha de Entrega
-11 de junio de 2024
+- Luciano Neimark
+- Paz Aramburu
+- Inés Murtagh
 
 ## Repositorio de Datasets
 [Datasets](https://l1nk.dev/aTrRE)
 
-## Ejercicios
+---
 
 ### Ejercicio 1 - MongoDB
-1. Importe el archivo `albumlist.csv` a una colección.
-2. Cuente la cantidad de álbumes por año y ordénelos de manera descendente.
-3. Agregar un nuevo atributo 'score' a cada documento.
-4. Mostrar el 'score' de cada artista.
+Para este ejercicio, se utilizará la base de datos MongoDB. Se deberá realizar una conexión desde Docker a MongoDB. Para ello, ejecutar los siguientes comandos:
+
+```bash
+docker pull mongo
+docker run --name Mymongo -p 27017:27017 -d mongo
+
+
+### Ejercicio 1 - MongoDB
+Para este ejercicio, se utilizará la base de datos MongoDB. Se deberá realizar una conexión desde Docker a MongoDB. 
+Para ello, ejecutar los siguientes comandos:
+
+```bash
+docker pull mongo
+docker run --name Mymongo -p 27017:27017 -d mongo
+```
+
+Copiar el archivo `albumlist.csv` al contenedor de MongoDB:
+
+```bash
+docker cp albumlist.csv Mymongo:/albumlist.csv
+docker exec -it Mymongo bash
+```
+
+Luego, importar el archivo CSV a MongoDB y ejecutar las consultas necesarias. Para ello, hay que acceder al contenedor de MongoDB y utilizar el shell de MongoDB (`mongosh`):
+
+```bash
+# Acceder al contenedor MongoDB
+docker exec -it Mymongo bash
+
+# Importar el archivo CSV a MongoDB
+mongoimport --headerline --db tpo --collection albumlist --type csv --file /albumlist.csv
+
+# Acceder al shell de MongoDB
+mongosh
+
+# Conectar a la base de datos 'tpo'
+use tpo
+```
+
+```bash
+# 1. Contar la cantidad de álbumes por año y ordenarlos de manera descendente
+db.albumlist.aggregate([
+    { "$group": { "_id": "$Year", "count": { "$sum": 1 } } },
+    { "$sort": { "count": -1 } }
+])
+
+# 2. Agregar un nuevo atributo 'score' a cada documento
+db.albumlist.updateMany({}, [
+    { "$set": { "score": { "$subtract": [501, "$Number"] } } }
+])
+
+# 3. Mostrar el 'score' de cada artista
+db.albumlist.aggregate([
+    { $group: { _id: "$Artist", total_score: { $sum: "$score" } } },
+    { $project: { _id: 0, artist: "$_id", total_score: 1 } },
+    { $sort: { total_score: -1 } }
+])
+```
 
 
 ### Ejercicio 3 - Redis
