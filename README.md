@@ -1,12 +1,12 @@
 # Trabajo Práctico Obligatorio
 Fecha de Entrega: 19 de junio de 2024
+*Repositorio de Datasets [en este link](https://l1nk.dev/aTrRE)*
+
 
 ## Integrantes
 - Luciano Neimark
 - Paz Aramburu
 - Inés Murtagh
-
-*Repositorio de Datasets [en este link](https://l1nk.dev/aTrRE)*
 
 
 ---
@@ -57,6 +57,7 @@ db.albumlist.aggregate([
     { $sort: { total_score: -1 } }
 ])
 ```
+
 
 ---
 
