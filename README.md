@@ -8,15 +8,8 @@ Fecha de Entrega: 19 de junio de 2024
 
 *Repositorio de Datasets [en este link](https://l1nk.dev/aTrRE)*
 
+
 ---
-
-### Ejercicio 1 - MongoDB
-Para este ejercicio, se utilizará la base de datos MongoDB. Se deberá realizar una conexión desde Docker a MongoDB. Para ello, ejecutar los siguientes comandos:
-
-```bash
-docker pull mongo
-docker run --name Mymongo -p 27017:27017 -d mongo
-
 
 ### Ejercicio 1 - MongoDB
 Para este ejercicio, se utilizará la base de datos MongoDB. Se deberá realizar una conexión desde Docker a MongoDB. 
@@ -27,28 +20,23 @@ docker pull mongo
 docker run --name Mymongo -p 27017:27017 -d mongo
 ```
 
-Copiar el archivo `albumlist.csv` al contenedor de MongoDB:
+Copiar el archivo `albumlist.csv` al contenedor de MongoDB y acceder al mismo, para luego importar el archivo CSV a MongoDB:
 
 ```bash
 docker cp albumlist.csv Mymongo:/albumlist.csv
 docker exec -it Mymongo bash
+mongoimport --headerline --db tpo --collection albumlist --type csv --file /albumlist.csv
 ```
+El comando mongoimport crea la base de datos y la colección especificadas si no existen. Esto significa que en este caso, como 'tpo' no existe y la colección 'albumlist' tampoco, mongoimport las creará automáticamente durante la importación.
 
-Luego, importar el archivo CSV a MongoDB y ejecutar las consultas necesarias. Para ello, hay que acceder al contenedor de MongoDB y utilizar el shell de MongoDB (`mongosh`):
+Finalmente, para ejecutar las consultas necesarias, se debe acceder y utilziar el shell de MongoDB (`mongosh`):
 
 ```bash
-# Acceder al contenedor MongoDB
-docker exec -it Mymongo bash
-
-# Importar el archivo CSV a MongoDB
-mongoimport --headerline --db tpo --collection albumlist --type csv --file /albumlist.csv
-
-# Acceder al shell de MongoDB
 mongosh
-
-# Conectar a la base de datos 'tpo'
-use tpo
+use tpo  # conectar a la base de datos 'tpo'
 ```
+
+En el siguiente código se resolvieron los ejercicios:
 
 ```bash
 # 1. Contar la cantidad de álbumes por año y ordenarlos de manera descendente
@@ -70,6 +58,7 @@ db.albumlist.aggregate([
 ])
 ```
 
+---
 
 ### Ejercicio 3 - Redis
 Para este ejercicio, se utilizará la base de datos Redis. Se deberá realizar una conexión desde docker a redis. Para ello ejecutar los siguientes comandos:
