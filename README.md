@@ -89,7 +89,8 @@ A continuación se dejan los resultados de la ejecucuión:
 }
 ```
 
-**Ejercicio 2**
+### Ejercicio 2 - Neo4j
+
 Se requiere inicializar un sandbox de Neo4j en https://sandbox.neo4j.com/
 Luego de popular la base de datos se ejecutan las siguientes consultas:
 
