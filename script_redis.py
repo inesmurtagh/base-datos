@@ -7,7 +7,7 @@ r = redis.Redis(host='localhost', port=6379, db=0)
 
 # Nombre del conjunto geoespacial en Redis
 geo_key = 'bataxi'
-print("Adding data to redis...")
+print("Populando la base de datos redis...")
 # Abre el archivo CSV
 with open('bataxi.csv', mode='r', encoding='utf-8-sig') as file:
     csv_reader = csv.DictReader(file)
@@ -20,7 +20,7 @@ with open('bataxi.csv', mode='r', encoding='utf-8-sig') as file:
         # Usa el comando GEOADD para añadir los datos
         r.geoadd(geo_key, (longitude, latitude, id))
 
-print("Geospacial data added to Redis.\n")
+print("Data geoespacial cargada en la base de datos.\n")
 
 # Definir la lista de lugares
 places = [
@@ -35,17 +35,17 @@ total_nearby_trips = 0
 for place in places:
     nearby_trips = r.georadius("bataxi", place["lon"], place["lat"], 1, unit='km')
     total_nearby_trips += len(nearby_trips)
-    print(f"Found {len(nearby_trips)} trips near {place['place']}")
+    print(f"Se encontraron {len(nearby_trips)} viajes cercanos a {place['place']}")
 
-print(f"Total trips within 1 km of the places: {total_nearby_trips}\n")
+print(f"Cantidad de viajes total a 1KM: {total_nearby_trips}\n")
 
 # Cantidad de keys en redis
 keys_qty = r.dbsize()
-print("Total keys in redis: ", keys_qty, '\n')
+print("Claves totales: ", keys_qty, '\n')
 
 # Cantidad de miembros de bataxi
 members_qty = r.zcard('bataxi')
-print("Total members in bataxi: ", members_qty, '\n')
+print("Claves dentro de bataxi: ", members_qty, '\n')
 
 # Estructura de redis de geoadd
-print("GEOADD uses a sorted set")
+print("GEOADD usa un set ordenado.")

@@ -48,8 +48,8 @@ db.albumlist.aggregate([
     { "$sort": { "count": -1 } }
 ])
 
-# 2. Agregar un nuevo atributo 'score' a cada documento
-db.albumlist.updateMany({}, [
+# 2. Agregar un nuevo atributo 'score' a cada documento (Se asume score como la suma de los scores por album)
+db.albumlist.updateMany({}, [ 
     { "$set": { "score": { "$subtract": [501, "$Number"] } } }
 ])
 
@@ -89,10 +89,50 @@ A continuación se dejan los resultados de la ejecucuión:
 }
 ```
 
+**Ejercicio 2**
+
+```
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 500,
+  modifiedCount: 500,
+  upsertedCount: 0
+}
+```
+
+**Ejercicio 3**
+(se muestran solo las primeras 5 filas de resultado)
+
+```
+{
+  total_score: 3855,
+  artist: 'The Beatles'
+}
+{
+  total_score: 3604,
+  artist: 'The Rolling Stones'
+}
+{
+  total_score: 3377,
+  artist: 'Bob Dylan'
+}
+{
+  total_score: 2251,
+  artist: 'Bruce Springsteen'
+}
+{
+  total_score: 2210,
+  artist: 'The Who'
+}
+```
+
+---
+
 ### Ejercicio 2 - Neo4j
 
 Se requiere inicializar un sandbox de Neo4j en https://sandbox.neo4j.com/
-Luego de popular la base de datos se ejecutan las siguientes consultas:
+Luego de popular la base de datos (como se especifica en la consigna) se ejecutan las siguientes consultas:
 
 Query 1:
 
@@ -134,31 +174,6 @@ Salida:
 | Chai | 18.0 |
 | Anissed Syrup | 10.0 |
 
-**Ejercicio 3**
-(se muestran solo las primeras 5 filas de resultado)
-
-```
-{
-  total_score: 3855,
-  artist: 'The Beatles'
-}
-{
-  total_score: 3604,
-  artist: 'The Rolling Stones'
-}
-{
-  total_score: 3377,
-  artist: 'Bob Dylan'
-}
-{
-  total_score: 2251,
-  artist: 'Bruce Springsteen'
-}
-{
-  total_score: 2210,
-  artist: 'The Who'
-}
-```
 
 ---
 
@@ -174,12 +189,10 @@ docker run --name Myredis -p 6379:6379 -d redis
 Copiar los archivos bataxi.csv y script_redis.py al contenedor de redis:
 
 ```bash
-docker cp bataxi.csv <id_container>:/bataxi.csv
-docker cp script_redis.py <id_container>:/script_redis.py
+docker cp bataxi.csv Myredis:/bataxi.csv
+docker cp script_redis.py Myredis:/script_redis.py
 docker exec -it Myredis bash
 ```
-
-siendo `<id_container>` el id del contenedor de redis.
 
 Luego, ejecutar el script de python en el contenedor. Para ello, hay que tener instalado python3 en el contenedor y la dependencia de redis:
 
@@ -205,46 +218,53 @@ En el siguiente script se resolvieron los ejercicios
 import csv
 import redis
 
+# Conectar a Redis
 r = redis.Redis(host='localhost', port=6379, db=0)
+
+# Nombre del conjunto geoespacial en Redis
 geo_key = 'bataxi'
-print("Adding data to redis...")
-# a. Importar los datos del archivo a Redis
+print("Populando la base de datos redis...")
+# Abre el archivo CSV
 with open('bataxi.csv', mode='r', encoding='utf-8-sig') as file:
     csv_reader = csv.DictReader(file)
     for row in csv_reader:
+        # Extrae los datos necesarios
         id = row['id_viaje_r']
         longitude = row['origen_viaje_x']
         latitude = row['origen_viaje_y']
+
+        # Usa el comando GEOADD para añadir los datos
         r.geoadd(geo_key, (longitude, latitude, id))
 
-print("Geospacial data added to Redis.\n")
+print("Data geoespacial cargada en la base de datos.\n")
 
-# b. ¿Cuántos viajes se generaron a 1 km de distancia de estos 3 lugares?
+# Definir la lista de lugares
 places = [
     {"place": "Parque Chas", "lon": -58.479258, "lat": -34.582497},
     {"place": "UTN", "lon": -58.468606, "lat": -34.658304},
     {"place": "ITBA Madero", "lon": -58.367862, "lat": -34.602938}
 ]
 
+# Contar la cantidad de viajes a 1 km de distancia de cada lugar
 total_nearby_trips = 0
 
 for place in places:
     nearby_trips = r.georadius("bataxi", place["lon"], place["lat"], 1, unit='km')
     total_nearby_trips += len(nearby_trips)
-    print(f"Found {len(nearby_trips)} trips near {place['place']}")
+    print(f"Se encontraron {len(nearby_trips)} viajes cercanos a {place['place']}")
 
-print(f"Total trips within 1 km of the places: {total_nearby_trips}\n")
+print(f"Cantidad de viajes total a 1KM: {total_nearby_trips}\n")
 
-# c. ¿Cuántas KEYS hay en la base de datos Redis?
+# Cantidad de keys en redis
 keys_qty = r.dbsize()
-print("Total keys in redis: ", keys_qty, '\n')
+print("Claves totales: ", keys_qty, '\n')
 
-# d. ¿Cuántos miembros tiene la key 'bataxi'?
+# Cantidad de miembros de bataxi
 members_qty = r.zcard('bataxi')
-print("Total members in bataxi: ", members_qty, '\n')
+print("Claves dentro de bataxi: ", members_qty, '\n')
 
-# e. ¿Sobre qué estructura de Redis trabaja el GeoADD?
-print("GEOADD uses a sorted set")
+# Estructura de redis de geoadd
+print("GEOADD usa un set ordenado.")
 ```
 
 y sus respectivos resultados fueron:
