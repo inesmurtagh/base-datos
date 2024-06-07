@@ -49,7 +49,7 @@ db.albumlist.aggregate([
 ])
 
 # 2. Agregar un nuevo atributo 'score' a cada documento (Se asume score como la suma de los scores por album)
-db.albumlist.updateMany({}, [ 
+db.albumlist.updateMany({}, [
     { "$set": { "score": { "$subtract": [501, "$Number"] } } }
 ])
 
@@ -174,7 +174,6 @@ Salida:
 | Chai | 18.0 |
 | Anissed Syrup | 10.0 |
 
-
 ---
 
 ### Ejercicio 3 - Redis
@@ -253,6 +252,7 @@ for place in places:
     total_nearby_trips += len(nearby_trips)
     print(f"Se encontraron {len(nearby_trips)} viajes cercanos a {place['place']}")
 
+#Se asume como la union.
 print(f"Cantidad de viajes total a 1KM: {total_nearby_trips}\n")
 
 # Cantidad de keys en redis
@@ -270,17 +270,17 @@ print("GEOADD usa un set ordenado.")
 y sus respectivos resultados fueron:
 
 ```
-Adding data to redis...
-Geospacial data added to Redis.
+Populando la base de datos redis...
+Data geoespacial cargada en la base de datos.
 
-Found 339 trips near Parque Chas
-Found 9 trips near UTN
-Found 242 trips near ITBA Madero
-Total trips within 1 km of the places: 590
+Se encontraron 339 viajes cercanos a Parque Chas
+Se encontraron 9 viajes cercanos a UTN
+Se encontraron 242 viajes cercanos a ITBA Madero
+Cantidad de viajes total a 1KM: 590
 
-Total keys in redis:  1
+Claves totales:  1
 
-Total members in bataxi:  19148
+Claves dentro de bataxi:  19148
 
-GEOADD uses a sorted set
+GEOADD usa un set ordenado.
 ```
