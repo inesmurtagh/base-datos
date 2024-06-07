@@ -1,19 +1,20 @@
 # Trabajo Práctico Obligatorio
+
 Fecha de Entrega: 19 de junio de 2024
 
-*Repositorio de Datasets [en este link](https://l1nk.dev/aTrRE)*
-
+_Repositorio de Datasets [en este link](https://l1nk.dev/aTrRE)_
 
 ## Integrantes
+
 - Luciano Neimark
 - Paz Aramburu
 - Inés Murtagh
 
-
 ---
 
 ### Ejercicio 1 - MongoDB
-Para este ejercicio, se utilizará la base de datos MongoDB. Se deberá realizar una conexión desde Docker a MongoDB. 
+
+Para este ejercicio, se utilizará la base de datos MongoDB. Se deberá realizar una conexión desde Docker a MongoDB.
 Para ello, ejecutar los siguientes comandos:
 
 ```bash
@@ -28,6 +29,7 @@ docker cp albumlist.csv Mymongo:/albumlist.csv
 docker exec -it Mymongo bash
 mongoimport --headerline --db tpo --collection albumlist --type csv --file /albumlist.csv
 ```
+
 El comando mongoimport crea la base de datos y la colección especificadas si no existen. Esto significa que en este caso, como 'tpo' no existe y la colección 'albumlist' tampoco, mongoimport las creará automáticamente durante la importación.
 
 Finalmente, para ejecutar las consultas necesarias, se debe acceder y utilziar el shell de MongoDB (`mongosh`):
@@ -63,6 +65,7 @@ A continuación se dejan los resultados de la ejecucuión:
 
 **Ejercicio 1**
 (se muestran solo las primeras 5 filas de resultado)
+
 ```
 {
   _id: 1970,
@@ -91,53 +94,48 @@ Se requiere inicializar un sandbox de Neo4j en https://sandbox.neo4j.com/
 Luego de popular la base de datos se ejecutan las siguientes consultas:
 
 Query 1:
+
 ```
 match (p:Product) return count(p)
 ```
-Salida: 77 
 
+Salida: 77
 
 Query 2:
+
 ```
 match (p:Product) where (p.productName = 'Queso Cabrales') return p.unitPrice
 ```
-Salida: 21.0 
 
+Salida: 21.0
 
 Query 3:
+
 ```
 match (p:Product)-[r:PART_OF]->(c:Category {categoryName: 'Condiments'}) return count(p)
 ```
+
 Salida: 12
 
-
-
 Query 4:
+
 ```
 match (s:Supplier {country:'UK'})-[:SUPPLIES]->(p:Product)
 return p.productName, p.unitPrice
 order by p.unitPrice DESC
 limit 3
 ```
-Salida: 
-| p.productName | p.unitPrice   | 
+
+Salida:
+| p.productName | p.unitPrice |
 | ------------- |:-------------:|
-| Chang         | 19.0          |
-| Chai          | 18.0          |
-| Anissed Syrup | 10.0          |
-
-
-{ 
-  acknowledged: true,
-  insertedId: null,
-  matchedCount: 500,
-  modifiedCount: 500,
-  upsertedCount: 0
-}
-
+| Chang | 19.0 |
+| Chai | 18.0 |
+| Anissed Syrup | 10.0 |
 
 **Ejercicio 3**
 (se muestran solo las primeras 5 filas de resultado)
+
 ```
 {
   total_score: 3855,
@@ -161,18 +159,19 @@ Salida:
 }
 ```
 
-
 ---
 
 ### Ejercicio 3 - Redis
+
 Para este ejercicio, se utilizará la base de datos Redis. Se deberá realizar una conexión desde docker a redis. Para ello ejecutar los siguientes comandos:
-    
+
 ```bash
 docker pull redis
 docker run --name Myredis -p 6379:6379 -d redis
 ```
+
 Copiar los archivos bataxi.csv y script_redis.py al contenedor de redis:
-        
+
 ```bash
 docker cp bataxi.csv <id_container>:/bataxi.csv
 docker cp script_redis.py <id_container>:/script_redis.py
@@ -182,19 +181,24 @@ docker exec -it Myredis bash
 siendo `<id_container>` el id del contenedor de redis.
 
 Luego, ejecutar el script de python en el contenedor. Para ello, hay que tener instalado python3 en el contenedor y la dependencia de redis:
+
 ```bash
 cd ..
 apt-get update
 apt-get install python3
 apt-get install python3-redis
 ```
+
 Ejecutar el script:
+
 ```bash
 ./script_redis.py
 ```
 
 #### Script y resultados
+
 En el siguiente script se resolvieron los ejercicios
+
 ```python
 #! /usr/bin/env python3
 import csv
@@ -243,6 +247,7 @@ print("GEOADD uses a sorted set")
 ```
 
 y sus respectivos resultados fueron:
+
 ```
 Adding data to redis...
 Geospacial data added to Redis.
@@ -252,9 +257,9 @@ Found 9 trips near UTN
 Found 242 trips near ITBA Madero
 Total trips within 1 km of the places: 590
 
-Total keys in redis:  1 
+Total keys in redis:  1
 
-Total members in bataxi:  19148 
+Total members in bataxi:  19148
 
 GEOADD uses a sorted set
 ```
