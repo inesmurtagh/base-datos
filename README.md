@@ -6,9 +6,9 @@ _Repositorio de Datasets [en este link](https://l1nk.dev/aTrRE)_
 
 ## Integrantes
 
-- Luciano Neimark
-- Paz Aramburu
-- Inés Murtagh
+- Luciano Neimark (62086)
+- Paz Aramburu (62556)
+- Inés Murtagh (61759)
 
 ---
 
