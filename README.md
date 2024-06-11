@@ -42,18 +42,18 @@ use tpo  # conectar a la base de datos 'tpo'
 En el siguiente código se resolvieron los ejercicios:
 
 ```bash
-# 1. Contar la cantidad de álbumes por año y ordenarlos de manera descendente
+# A. Contar la cantidad de álbumes por año y ordenarlos de manera descendente
 db.albumlist.aggregate([
     { "$group": { "_id": "$Year", "count": { "$sum": 1 } } },
     { "$sort": { "count": -1 } }
 ])
 
-# 2. Agregar un nuevo atributo 'score' a cada documento (Se asume score como la suma de los scores por album)
+# B. Agregar un nuevo atributo 'score' a cada documento (Se asume score como la suma de los scores por album)
 db.albumlist.updateMany({}, [
     { "$set": { "score": { "$subtract": [501, "$Number"] } } }
 ])
 
-# 3. Mostrar el 'score' de cada artista
+# C. Mostrar el 'score' de cada artista
 db.albumlist.aggregate([
     { $group: { _id: "$Artist", total_score: { $sum: "$score" } } },
     { $project: { _id: 0, artist: "$_id", total_score: 1 } },
@@ -63,7 +63,7 @@ db.albumlist.aggregate([
 
 A continuación se dejan los resultados de la ejecucuión:
 
-**Ejercicio 1**
+**Ejercicio A**
 (se muestran solo las primeras 5 filas de resultado)
 
 ```
@@ -89,7 +89,7 @@ A continuación se dejan los resultados de la ejecucuión:
 }
 ```
 
-**Ejercicio 2**
+**Ejercicio B**
 
 ```
 {
@@ -101,7 +101,7 @@ A continuación se dejan los resultados de la ejecucuión:
 }
 ```
 
-**Ejercicio 3**
+**Ejercicio C**
 (se muestran solo las primeras 5 filas de resultado)
 
 ```
