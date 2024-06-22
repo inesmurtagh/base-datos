@@ -48,12 +48,12 @@ db.albumlist.aggregate([
     { "$sort": { "count": -1 } }
 ])
 
-# B. Agregar un nuevo atributo 'score' a cada documento (Se asume score como la suma de los scores por album)
+# B. Agregar un nuevo atributo 'score' a cada documento
 db.albumlist.updateMany({}, [
     { "$set": { "score": { "$subtract": [501, "$Number"] } } }
 ])
 
-# C. Mostrar el 'score' de cada artista
+# C. Mostrar el 'score' de cada artista (se asume score como la suma de los scores por album)
 db.albumlist.aggregate([
     { $group: { _id: "$Artist", total_score: { $sum: "$score" } } },
     { $project: { _id: 0, artist: "$_id", total_score: 1 } },
@@ -134,7 +134,7 @@ A continuación se dejan los resultados de la ejecucuión:
 Se requiere inicializar un sandbox de Neo4j en https://sandbox.neo4j.com/
 Luego de popular la base de datos (como se especifica en la consigna) se ejecutan las siguientes consultas:
 
-Query 1:
+Query 1: ¿Cuántos productos hay en la base?
 
 ```
 match (p:Product) return count(p)
@@ -142,7 +142,7 @@ match (p:Product) return count(p)
 
 Salida: 77
 
-Query 2:
+Query 2: ¿Cuánto cuesta el “Queso Cabrales”?
 
 ```
 match (p:Product) where (p.productName = 'Queso Cabrales') return p.unitPrice
@@ -150,7 +150,7 @@ match (p:Product) where (p.productName = 'Queso Cabrales') return p.unitPrice
 
 Salida: 21.0
 
-Query 3:
+Query 3: ¿Cuántos productos pertenecen a la categoría “Condiments”?
 
 ```
 match (p:Product)-[r:PART_OF]->(c:Category {categoryName: 'Condiments'}) return count(p)
@@ -158,7 +158,8 @@ match (p:Product)-[r:PART_OF]->(c:Category {categoryName: 'Condiments'}) return 
 
 Salida: 12
 
-Query 4:
+Query 4: Del conjunto de productos que ofrecen los proveedores de “UK”, ¿Cuál es el
+nombre y el precio unitario de los tres productos más caros?
 
 ```
 match (s:Supplier {country:'UK'})-[:SUPPLIES]->(p:Product)
